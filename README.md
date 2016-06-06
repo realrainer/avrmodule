@@ -1,5 +1,10 @@
 # avrmodule
-Node.js multithread module for capture and decode video streams. Only http and rtsp video streams are supported, h264 and mjpeg codecs are supported. 
+Node.js multithread module for capture and decode video streams. Only http and rtsp video streams are supported, only h264 and mjpeg codecs are supported. 
+
+### Required
+* live555 installed with headers and shared libraries
+* ffmpeg
+* libcurl 
 
 ### Example usage:
 ```
