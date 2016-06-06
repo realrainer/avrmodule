@@ -1,10 +1,10 @@
 # avrmodule
 Node.js multithread C++ module for capture and decode video streams. 
-Only HTTP and RTSP input video streams are supported, only h264 and mjpeg input codecs are supported. Output stream may saved or encoded to mpeg1 and used to display in browser with [https://github.com/phoboslab/jsmpeg](jsmpeg) library
+Only HTTP and RTSP input video streams are supported, only h264 and mjpeg input codecs are supported. Output stream may saved or encoded to mpeg1 and used to display in browser with [jsmpeg](https://github.com/phoboslab/jsmpeg) library
 
 ### Required:
-* [http://www.live555.com](live555) with headers and shared libraries
-* [https://ffmpeg.org](ffmpeg) with headers and shared libraries
+* [live555](http://www.live555.com) with headers and shared libraries
+* [ffmpeg](https://ffmpeg.org) with headers and shared libraries
 * libcurl with headers and shared libraries
 
 ### Example usage:
