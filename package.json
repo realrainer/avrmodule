@@ -1,0 +1,8 @@
+{
+  "name": "avrmodule",
+  "version": "0.0.1",
+  "main": ".",
+  "dependencies": {
+    "nan": "^2.0.9"
+  }
+}
