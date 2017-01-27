@@ -42,13 +42,13 @@ void aStreamDecodeThread (uv_work_t * req) {
     if (pStreamDecode->AVRCodecId == AVR_CODEC_ID_H264) {
         codec = avcodec_find_decoder(AV_CODEC_ID_H264);
         c = avcodec_alloc_context3(codec);
-        c->pix_fmt = PIX_FMT_YUV420P;
+        c->pix_fmt = AV_PIX_FMT_YUV420P;
         c->profile = FF_PROFILE_H264_CONSTRAINED_BASELINE;
         if (codec->capabilities & CODEC_CAP_TRUNCATED) c->flags|= CODEC_FLAG_TRUNCATED;
     } else if (pStreamDecode->AVRCodecId == AVR_CODEC_ID_MJPEG) {
         codec = avcodec_find_decoder(AV_CODEC_ID_MJPEG);
         c = avcodec_alloc_context3(codec);
-        c->pix_fmt = PIX_FMT_YUV420P;
+        c->pix_fmt = AV_PIX_FMT_YUV420P;
     } else return;
 
     if (c == NULL) return;
@@ -63,7 +63,7 @@ void aStreamDecodeThread (uv_work_t * req) {
     pOutVideoCtx = avcodec_alloc_context3(pOutVideoCodec);
 
     if (previewEnable) {
-        pOutCtx->pix_fmt = PIX_FMT_YUVJ420P;
+        pOutCtx->pix_fmt = AV_PIX_FMT_YUVJ420P;
         pOutCtx->width = pStreamDecode->outputW;
         pOutCtx->height = pStreamDecode->outputH;
         pOutCtx->time_base.den = 10;
@@ -72,7 +72,7 @@ void aStreamDecodeThread (uv_work_t * req) {
         pOutCtx->bit_rate_tolerance = pStreamDecode->outputW * pStreamDecode->outputH * pStreamDecode->previewQuality;
     }
 
-    pOutVideoCtx->pix_fmt = PIX_FMT_YUV420P;
+    pOutVideoCtx->pix_fmt = AV_PIX_FMT_YUV420P;
     pOutVideoCtx->width = pStreamDecode->inputW;
     pOutVideoCtx->height = pStreamDecode->inputH;
     pOutVideoCtx->time_base.den = 25;
@@ -145,7 +145,7 @@ void aStreamDecodeThread (uv_work_t * req) {
                 int got_output;
                 if (previewEnable) {
                   convert_ctx = sws_getContext(c->width, c->height, c->pix_fmt,
-                    frame_small->width, frame_small->height, PIX_FMT_YUV420P, SWS_BILINEAR, NULL, NULL, NULL);
+                    frame_small->width, frame_small->height, AV_PIX_FMT_YUV420P, SWS_BILINEAR, NULL, NULL, NULL);
                   sws_scale(convert_ctx, frame->data, frame->linesize, 0,
                     c->height, frame_small->data, frame_small->linesize);
                   sws_freeContext (convert_ctx);
