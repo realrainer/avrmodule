@@ -86,15 +86,20 @@ void continueAfterDESCRIBE(RTSPClient* rtspClient, int resultCode, char* resultS
 void setupNextSubsession(RTSPClient* rtspClient) {
   UsageEnvironment& env = rtspClient->envir(); // alias
   StreamClientState& scs = ((ourRTSPClient*)rtspClient)->scs; // alias
-  
+
   scs.subsession = scs.iter->next();
   if (scs.subsession != NULL) {
     if (!scs.subsession->initiate()) {
       env << *rtspClient << "Failed to initiate the \"" << *scs.subsession << "\" subsession: " << env.getResultMsg() << "\n";
       setupNextSubsession(rtspClient); // give up on this subsession; go to the next one
     } else {
-      env << *rtspClient << "Initiated the \"" << *scs.subsession
-	  << "\" subsession (client ports " << scs.subsession->clientPortNum() << "-" << scs.subsession->clientPortNum()+1 << ")\n";
+      env << *rtspClient << "Initiated the \"" << *scs.subsession << "\" subsession (";
+      if (scs.subsession->rtcpIsMuxed()) {
+          env << "client port " << scs.subsession->clientPortNum();
+      } else {
+          env << "client ports " << scs.subsession->clientPortNum() << "-" << scs.subsession->clientPortNum()+1;
+      }
+      env << ")\n";
 
       // Continue setting up this subsession, by sending a RTSP "SETUP" command:
       rtspClient->sendSetupCommand(*scs.subsession, continueAfterSETUP, False, REQUEST_STREAMING_OVER_TCP);
@@ -122,8 +127,13 @@ void continueAfterSETUP(RTSPClient* rtspClient, int resultCode, char* resultStri
       break;
     }
 
-    env << *rtspClient << "Set up the \"" << *scs.subsession
-	<< "\" subsession (client ports " << scs.subsession->clientPortNum() << "-" << scs.subsession->clientPortNum()+1 << ")\n";
+    env << *rtspClient << "Set up the \"" << *scs.subsession << "\" subsession (";
+    if (scs.subsession->rtcpIsMuxed()) {
+      env << "client port " << scs.subsession->clientPortNum();
+    } else {
+      env << "client ports " << scs.subsession->clientPortNum() << "-" << scs.subsession->clientPortNum()+1;
+    }
+    env << ")\n";
 
     // Having successfully setup the subsession, create a data sink for it, and call "startPlaying()" on it.
     // (This will prepare the data sink to receive data; the actual flow of data from the client won't start happening until later,

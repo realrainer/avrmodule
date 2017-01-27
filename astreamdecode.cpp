@@ -41,12 +41,20 @@ void aStreamDecodeThread (uv_work_t * req) {
 
     if (pStreamDecode->AVRCodecId == AVR_CODEC_ID_H264) {
         codec = avcodec_find_decoder(AV_CODEC_ID_H264);
+        if (codec == NULL) {
+            fprintf(stderr, "avcodec_find_decoder: ERROR: Could not find input stream decoder\n");
+            return;
+        }
         c = avcodec_alloc_context3(codec);
         c->pix_fmt = AV_PIX_FMT_YUV420P;
         c->profile = FF_PROFILE_H264_CONSTRAINED_BASELINE;
         if (codec->capabilities & CODEC_CAP_TRUNCATED) c->flags|= CODEC_FLAG_TRUNCATED;
     } else if (pStreamDecode->AVRCodecId == AVR_CODEC_ID_MJPEG) {
         codec = avcodec_find_decoder(AV_CODEC_ID_MJPEG);
+        if (codec == NULL) {
+            fprintf(stderr, "avcodec_find_decoder: ERROR: Could not find input stream decoder\n");
+            return;
+        }
         c = avcodec_alloc_context3(codec);
         c->pix_fmt = AV_PIX_FMT_YUV420P;
     } else return;
@@ -56,8 +64,18 @@ void aStreamDecodeThread (uv_work_t * req) {
     c->width = pStreamDecode->inputW;
     c->height = pStreamDecode->inputH;
 
-    if (previewEnable) pOutCodec = avcodec_find_encoder(AV_CODEC_ID_MJPEG);
+    if (previewEnable) {
+        pOutCodec = avcodec_find_encoder(AV_CODEC_ID_MJPEG);
+        if (pOutCodec == NULL) {
+            fprintf(stderr, "avcodec_find_encoder: ERROR: Could not find preview encoder\n");
+            return;
+        }
+    }
     pOutVideoCodec = avcodec_find_encoder(AV_CODEC_ID_MPEG1VIDEO);
+    if (pOutVideoCodec == NULL) {
+        fprintf(stderr, "avcodec_find_encoder: ERROR: Could not find output stream encoder\n");
+        return;
+    }
 
     if (previewEnable) pOutCtx = avcodec_alloc_context3(pOutCodec);
     pOutVideoCtx = avcodec_alloc_context3(pOutVideoCodec);
