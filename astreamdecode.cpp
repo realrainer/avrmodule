@@ -63,7 +63,7 @@ void aStreamDecodeThread (uv_work_t * req) {
     pOutVideoCtx = avcodec_alloc_context3(pOutVideoCodec);
 
     if (previewEnable) {
-        pOutCtx->pix_fmt = AV_PIX_FMT_YUVJ420P;
+        pOutCtx->pix_fmt = AV_PIX_FMT_YUV420P;
         pOutCtx->width = pStreamDecode->outputW;
         pOutCtx->height = pStreamDecode->outputH;
         pOutCtx->time_base.den = 10;
@@ -91,7 +91,7 @@ void aStreamDecodeThread (uv_work_t * req) {
     }
     if (previewEnable) {
         if (avcodec_open2(pOutCtx, pOutCodec, NULL) < 0) {
-            fprintf(stderr, "avcodec_open2: ERROR: Could not open output codec\n");
+            fprintf(stderr, "avcodec_open2: ERROR: Could not open output codec for preview\n");
             return;
         }
     }
